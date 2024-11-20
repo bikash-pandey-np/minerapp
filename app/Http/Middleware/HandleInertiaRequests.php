@@ -4,7 +4,8 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 class HandleInertiaRequests extends Middleware
 {
     /**
@@ -37,7 +38,21 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-            //
+            'flash' => [
+                'error' => $request->session()->get('error'),
+                'success' => $request->session()->get('success'),
+                'info' => $request->session()->get('info'),
+            ],
+            'customer' => [
+                'full_name' => Auth::guard('customer')->user()->full_name ?? null,
+                'email' => Auth::guard('customer')->user()->email ?? null,
+                'account_id' => Auth::guard('customer')->user()->account_id ?? null,
+                'avatar' => Auth::guard('customer')->user()->avatar ?? null,
+                'total_earned' => Auth::guard('customer')->user()->total_earned ?? null,
+                'is_pro_account' => Auth::guard('customer')->user()->is_pro_account ?? null,
+                'is_email_verified' => Auth::guard('customer')->user()->is_email_verified ?? null,
+                'pro_account_expiry' => Auth::guard('customer')->check() ? Carbon::parse(Auth::guard('customer')->user()->pro_account_expiry)->format('M d, Y h:i:s A') : null,
+            ],
         ]);
     }
 }

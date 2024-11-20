@@ -1,3 +1,21 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+
+.steps .step-secondary + .step-secondary:before,
+.steps .step-secondary:after {
+    background: linear-gradient(90deg, #8e44ad, #5b2c91);
+    color: #fff;
+}
+
+
+.steps .step-default + .step-default:before,
+.steps .step-default:after {
+    background: linear-gradient(90deg, #9a999a, #3f3f3f);
+    color: #fff;
+}
+
+.steps .step:before{
+    background-color: #5b2c91;
+}
