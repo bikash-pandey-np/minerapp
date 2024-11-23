@@ -2,6 +2,7 @@ import Layout from "../Layout";
 import { useForm } from '@inertiajs/inertia-react';
 import { useState, useEffect } from 'react';
 import { IoCopy, IoWarning } from 'react-icons/io5';
+import { FaShoppingCart } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
 import Helmet from 'react-helmet';
@@ -245,11 +246,12 @@ const BuyNow = ({ plans, selectedPlan: initialSelectedPlan, planAccountWalletAdd
 
                                         <div className="mt-6">
                                             <button
-                                                className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 flex items-center gap-2"
                                                 type="submit"
                                                 disabled={processing}
                                             >
-                                                Get Now
+                                                <FaShoppingCart className="text-xl" />
+                                                BUY NOW
                                             </button>
                                         </div>
 

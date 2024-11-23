@@ -1,7 +1,7 @@
 import Layout from "../Layout";
 import { useForm } from '@inertiajs/inertia-react';
 import { motion } from 'framer-motion';
-import { FaKey, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaKey, FaEye, FaEyeSlash, FaSave } from 'react-icons/fa';
 import { useState } from 'react';
 import Helmet from 'react-helmet';
 const ChangePassword = ({ errors, title }) => {
@@ -150,10 +150,10 @@ const ChangePassword = ({ errors, title }) => {
                             <motion.button
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
-                                className="btn btn-primary w-full"
+                                className="btn btn-primary gap-2"
                                 disabled={processing}
                             >
-                                Update Password
+                                <FaSave className="w-4 h-4" /> Update Password
                             </motion.button>
                         </form>
                     </div>

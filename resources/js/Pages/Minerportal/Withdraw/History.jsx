@@ -16,7 +16,7 @@ const History = ({ withdrawals, searchStatus, title }) => {
         searchTerm: ''
     });
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 6;
+    const itemsPerPage = 2;
 
     const cardVariants = {
         hidden: { opacity: 0, y: 20 },

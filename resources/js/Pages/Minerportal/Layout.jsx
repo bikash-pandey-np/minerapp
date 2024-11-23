@@ -264,6 +264,30 @@ const Layout = ({ children, title, description, backHref }) => {
             </AnimatePresence>
 
             <main className={`flex-grow container mx-auto px-4 py-8 relative`}>
+            {!customer.is_email_verified && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="mb-8"
+                    >
+                        <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r shadow-lg">
+                            <div className="flex items-center">
+                                <div className="flex-shrink-0">
+                                    <MdMarkEmailRead className="h-5 w-5 text-blue-400 animate-bounce" />
+                                </div>
+                                <div className="ml-3">
+                                    <p className="text-sm text-blue-700">
+                                        Please verify your email address to ensure account security and access all features.
+                                        <Link href={route('miners.verify-email')} className="font-medium underline hover:text-blue-600 ml-1">
+                                            Verify now
+                                        </Link>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
                 {children}
                 <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40">
                     <Link href={route('miners.miner')} className="btn btn-circle btn-lg bg-gradient-to-r from-red-500 to-orange-300 border-4 border-white shadow-xl hover:shadow-2xl transition-all duration-300" style={{ boxShadow: '0 10px 25px -5px rgba(239, 68, 68, 0.5), 0 8px 10px -6px rgba(253, 186, 116, 0.5)' }}>

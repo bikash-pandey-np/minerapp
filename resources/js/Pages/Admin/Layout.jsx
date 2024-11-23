@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { FiMenu, FiHome, FiUsers, FiLogOut, FiDollarSign } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import Swal from 'sweetalert2';
+import { Helmet } from 'react-helmet';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -139,10 +140,35 @@ const Layout = ({ children, title }) => {
                                     </AnimatePresence>
                                 </Link>
                             </li>
+                                <li>
+                                    <Link 
+                                        href={route('admin.planPayments')} 
+                                        className={isActive('/admin/miner-payments')}
+                                    >
+                                        <motion.div
+                                            variants={iconVariants}
+                                            animate={isSidebarOpen ? 'open' : 'closed'}
+                                        >
+                                            <FiDollarSign className="w-5 h-5" />
+                                        </motion.div>
+                                        <AnimatePresence>
+                                            {isSidebarOpen && (
+                                                <motion.span
+                                                    variants={textVariants}
+                                                    initial="closed"
+                                                    animate="open"
+                                                    exit="closed"
+                                                >
+                                                    Miner Payments
+                                                </motion.span>
+                                            )}
+                                        </AnimatePresence>
+                                    </Link>
+                                </li>
                             <li>
                                 <Link 
-                                    href={route('admin.planPayments')} 
-                                    className={isActive('/admin/miner-payments')}
+                                    href={route('admin.withdraw')} 
+                                    className={isActive('/admin/withdraw')}
                                 >
                                     <motion.div
                                         variants={iconVariants}
@@ -158,7 +184,7 @@ const Layout = ({ children, title }) => {
                                                 animate="open"
                                                 exit="closed"
                                             >
-                                                Miner Payments
+                                                Withdraw
                                             </motion.span>
                                         )}
                                     </AnimatePresence>

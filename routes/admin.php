@@ -17,4 +17,12 @@ Route::namespace('\App\Http\Controllers\Admin')->group(function(){
         Route::post('/approve', 'MinerPlanPaymentController@approve')->name('approvePayment');
         Route::post('/reject', 'MinerPlanPaymentController@reject')->name('rejectPayment');
     });
+
+    Route::prefix('withdraw')->group(function(){
+        Route::get('/', 'WithdrawController@index')->name('withdraw');
+
+        Route::post('/process/{identifier}', 'WithdrawController@processWithdraw')->name('processWithdraw');
+        Route::post('/complete/{identifier}', 'WithdrawController@completeWithdraw')->name('completeWithdraw');
+        Route::post('/reject/{identifier}', 'WithdrawController@rejectWithdraw')->name('rejectWithdraw');
+    });
 });

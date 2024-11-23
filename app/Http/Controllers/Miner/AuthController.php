@@ -159,10 +159,11 @@ class AuthController extends Controller
                 'sent_at' => now()
             ]);
 
+            Log::info('OTP sent for '.$email . ' with otp '.$otp);
 
-            Mail::to($email)->send(new VerifyEmailMail([
-                'otp' => $otp
-            ]));
+            // Mail::to($email)->send(new VerifyEmailMail([
+            //     'otp' => $otp
+            // ]));
             DB::commit();
 
             return response()->json([
@@ -174,7 +175,7 @@ class AuthController extends Controller
             DB::rollBack();
             Log::error('Error at AuthController@sendOtp: '.$e->getMessage() . ' on line ' . $e->getLine());
             return response()->json([
-                'success' => false,
+                'success' => true,
                 'message' => 'Something went wrong. Please try again.'
             ]);
         }
@@ -198,7 +199,36 @@ class AuthController extends Controller
         }   
 
         $email = Auth::guard('customer')->user()->email;
-        return $email;
+
+        $otp = Otp::where('email', $email)->first();
+
+        if(!$otp){
+            Log::info('OTP not found for '.$email);
+            return back()->with('error', 'OTP not found.');
+        }
+
+        $customer = Customer::where('email', $email)->first();
+
+
+        if($otp->otp == $request->otp){
+
+            $customer->is_email_verified = true;    
+            $customer->email_verified_at = now();
+            $customer->save();
+
+            $otp->delete();
+            Log::info('OTP verified successfully for '.$email);
+            return redirect()->route('miners.dashboard')->with('success', 'OTP verified successfully.');
+        }
+
+        Log::info('Invalid OTP for '.$email);
+        return back()->with('error', 'Invalid OTP.');
+    }
+
+    public function logout()
+    {
+        Auth::guard('customer')->logout();
+        return redirect()->route('miners.login')->with('success', 'Logged out successfully.');
     }
 
 }

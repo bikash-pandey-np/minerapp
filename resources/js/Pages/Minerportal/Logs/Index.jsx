@@ -8,7 +8,6 @@ import { HiOutlineReceiptRefund } from 'react-icons/hi';
 import Helmet from 'react-helmet';
 
 const Index = ({ minerTransactions, filters, isMinerTransactionSearched, title }) => {
-    const [activeTab, setActiveTab] = useState('miner');
     const [selectedTransaction, setSelectedTransaction] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [filterInputs, setFilterInputs] = useState({
@@ -17,7 +16,7 @@ const Index = ({ minerTransactions, filters, isMinerTransactionSearched, title }
         searchTerm: filters.searchTerm || ''
     });
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 1;
+    const itemsPerPage = 9;
 
     const cardVariants = {
         hidden: { opacity: 0, y: 20 },
@@ -125,243 +124,211 @@ const Index = ({ minerTransactions, filters, isMinerTransactionSearched, title }
                 <title>{title}</title>
             </Helmet>
             <div className={`container mx-auto px-4 mb-[10rem] md:mb-[18rem] ${showModal ? 'blur-sm' : ''}`}>
-                <motion.div 
-                    className="tabs tabs-boxed mb-6"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                >
-                    <a
-                        className={`tab ${activeTab === 'miner' ? 'bg-gradient-to-r from-purple-800 to-indigo-900 text-white' : ''}`}
-                        onClick={() => setActiveTab('miner')}
-                    >
-                        Miner Transactions
-                    </a>
-                    <a
-                        className={`tab ${activeTab === 'earning' ? 'bg-gradient-to-r from-purple-800 to-indigo-900 text-white' : ''}`}
-                        onClick={() => setActiveTab('earning')}
-                    >
-                        Earning Logs
-                    </a>
-                </motion.div>
                 <div className="mt-4 text-gray-700">
-                    {activeTab === 'miner' && (
-                        <div>
+                    <motion.div 
+                        className="mb-6 w-full"
+                        variants={filterVariants}
+                        initial="hidden"
+                        animate="visible"
+                        transition={{ duration: 0.4 }}
+                    >
+                        <motion.div 
+                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+                            variants={filterVariants}
+                            transition={{ staggerChildren: 0.1 }}
+                        >
                             <motion.div 
-                                className="mb-6 w-full"
+                                className="form-control w-full"
                                 variants={filterVariants}
-                                initial="hidden"
-                                animate="visible"
-                                transition={{ duration: 0.4 }}
                             >
-                                <motion.div 
-                                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-                                    variants={filterVariants}
-                                    transition={{ staggerChildren: 0.1 }}
+                                <label className="label">
+                                    <span className="label-text">Payment Date</span>
+                                </label>
+                                <input
+                                    type="date"
+                                    className="input input-bordered input-sm w-full"
+                                    value={filterInputs.paymentDate}
+                                    onChange={(e) => handleInputChange('paymentDate', e.target.value)}
+                                />
+                            </motion.div>
+                            <motion.div 
+                                className="form-control w-full"
+                                variants={filterVariants}
+                            >
+                                <label className="label">
+                                    <span className="label-text">Payment Status</span>
+                                </label>
+                                <select
+                                    className="select select-bordered select-sm w-full"
+                                    value={filterInputs.status}
+                                    onChange={(e) => handleInputChange('status', e.target.value)}
                                 >
-                                    <motion.div 
-                                        className="form-control w-full"
-                                        variants={filterVariants}
-                                    >
-                                        <label className="label">
-                                            <span className="label-text">Payment Date</span>
-                                        </label>
-                                        <input
-                                            type="date"
-                                            className="input input-bordered input-sm w-full"
-                                            value={filterInputs.paymentDate}
-                                            onChange={(e) => handleInputChange('paymentDate', e.target.value)}
-                                        />
-                                    </motion.div>
-                                    <motion.div 
-                                        className="form-control w-full"
-                                        variants={filterVariants}
-                                    >
-                                        <label className="label">
-                                            <span className="label-text">Payment Status</span>
-                                        </label>
-                                        <select
-                                            className="select select-bordered select-sm w-full"
-                                            value={filterInputs.status}
-                                            onChange={(e) => handleInputChange('status', e.target.value)}
-                                        >
-                                            <option value="">All</option>
-                                            <option value="pending">Pending</option>
-                                            <option value="approved">Approved</option>
-                                            <option value="rejected">Rejected</option>
-                                        </select>
-                                    </motion.div>
-
-                                    <motion.div 
-                                        className="form-control w-full"
-                                        variants={filterVariants}
-                                    >
-                                        <label className="label">
-                                            <span className="label-text">Search</span>
-                                        </label>
-                                        <div className="relative">
-                                            <input
-                                                type="text"
-                                                className="input input-bordered input-sm w-full"
-                                                placeholder="Search transactions..."
-                                                value={filterInputs.searchTerm}
-                                                onChange={(e) => handleInputChange('searchTerm', e.target.value)}
-                                            />
-                                        </div>
-                                    </motion.div>
-
-                                    <motion.div 
-                                        className="form-control w-full flex flex-col justify-end"
-                                        variants={filterVariants}
-                                    >
-                                        <div className="flex gap-2 h-[30px]">
-                                            <AnimatePresence>
-                                                {isMinerTransactionSearched && (
-                                                    <motion.button
-                                                        initial={{ opacity: 0, x: -20 }}
-                                                        animate={{ opacity: 1, x: 0 }}
-                                                        exit={{ opacity: 0, x: -20 }}
-                                                        className="btn btn-error btn-outline btn-sm flex-1 min-h-0 h-full hover:bg-error/20"
-                                                        onClick={resetSearch}
-                                                    >
-                                                        Reset
-                                                    </motion.button>
-                                                )}
-                                            </AnimatePresence>
-                                            <motion.button
-                                                whileHover={{ scale: 1.02 }}
-                                                whileTap={{ scale: 0.98 }}
-                                                className="btn btn-primary btn-sm flex-1 min-h-0 h-full"
-                                                onClick={applyFilters}
-                                            >
-                                                Apply
-                                            </motion.button>
-                                        </div>
-                                    </motion.div>
-                                </motion.div>
+                                    <option value="">All</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="rejected">Rejected</option>
+                                </select>
                             </motion.div>
 
-                            <div className="bg-base-200 p-4 rounded-lg mb-6">
-                                <p className="text-sm text-gray-600">
-                                    Showing {Math.min(currentItems.length, itemsPerPage)} Records from {minerTransactions.length} Records
-                                </p>
-                            </div>
-
-                            {minerTransactions.length === 0 ? (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5 }}
-                                    className="card bg-white shadow-[0_0_15px_rgba(0,0,0,0.1)] hover:shadow-[0_0_20px_rgba(0,0,0,0.15)] transition-all duration-300 p-8"
-                                >
-                                    <div className="text-center text-gray-600">
-                                        <h3 className="text-xl font-semibold mb-2">No Data Found</h3>
-                                        <p className="text-sm">There are no transactions to display.</p>
-                                    </div>
-                                </motion.div>
-                            ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {currentItems.map((transaction, index) => (
-                                        <motion.div
-                                            key={transaction.id}
-                                            variants={cardVariants}
-                                            initial="hidden"
-                                            animate="visible"
-                                            transition={{ duration: 0.5, delay: index * 0.1 }}
-                                            className="card bg-white shadow-[0_0_15px_rgba(0,0,0,0.1)] hover:shadow-[0_0_20px_rgba(0,0,0,0.15)] transition-all duration-300 border border-gray-100"
-                                        >
-                                            <div className="card-body">
-                                                <p className="text-sm mb-1">
-                                                    <span className="font-medium">Identifier:</span>
-                                                    <span className="font-mono font-semibold"> {transaction.transaction_identifier}</span>
-                                                </p>
-                                                <p className="text-sm mb-1">
-                                                    <span className="font-medium">Amount:</span>
-                                                    <span className="font-mono font-semibold"> {parseFloat(transaction.investment_amount).toFixed(2)} USDT</span>
-                                                </p>
-                                                <p className="text-sm mb-1">
-                                                    <span className="font-medium">TXN Hash:</span>
-                                                    <span className="font-mono font-semibold"> {transaction.txn_hash}</span>
-                                                </p>
-                                                <p className="text-sm mb-1">
-                                                    <span className="font-medium">Status:</span>
-                                                    <span className={`capitalize ${transaction.status === 'pending' ? 'text-yellow-500' : 'text-green-500'}`}>
-                                                        &nbsp; {transaction.status}
-                                                    </span>
-                                                </p>
-                                                <p className="text-sm mb-1">
-                                                    <span className="font-medium">Payment For:</span>
-                                                    <span className="font-mono font-semibold">
-                                                        &nbsp;{transaction.miner_plan.name} ({transaction.miner_plan.hash_power} GH/s)
-                                                    </span>
-                                                </p>
-                                                <p className="text-sm mb-1">
-                                                    <span className="font-medium">Plan Duration :</span>
-                                                    <span className="font-mono font-semibold">
-                                                        &nbsp;{transaction.miner_plan.duration} days
-                                                    </span>
-                                                </p>
-                                                <p className="text-sm mb-1">
-                                                    <span className="font-medium">Date:</span>
-                                                    <span className="font-mono font-semibold">
-                                                        &nbsp;{new Date(transaction.created_at).toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
-                                                    </span>
-                                                </p>
-                                                <div className="card-actions justify-end mt-4">
-                                                    <motion.button 
-                                                        whileHover={{ scale: 1.05 }}
-                                                        whileTap={{ scale: 0.95 }}
-                                                        className="btn btn-primary btn-sm"
-                                                        onClick={() => openTransactionModal(transaction)}
-                                                    >
-                                                        View Details
-                                                    </motion.button>
-                                                </div>
-                                            </div>
-                                        </motion.div>
-                                    ))}
+                            <motion.div 
+                                className="form-control w-full"
+                                variants={filterVariants}
+                            >
+                                <label className="label">
+                                    <span className="label-text">Search</span>
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        className="input input-bordered input-sm w-full"
+                                        placeholder="Search transactions..."
+                                        value={filterInputs.searchTerm}
+                                        onChange={(e) => handleInputChange('searchTerm', e.target.value)}
+                                    />
                                 </div>
-                            )}
+                            </motion.div>
 
-                            {totalPages > 1 && (
-                                <div className="flex justify-center mt-8">
-                                    <div className="join">
-                                        <button 
-                                            className="join-item btn btn-sm"
-                                            onClick={() => paginate(currentPage - 1)}
-                                            disabled={currentPage === 1}
-                                        >
-                                            «
-                                        </button>
-                                        {[...Array(totalPages)].map((_, index) => (
-                                            <button
-                                                key={index}
-                                                className={`join-item btn btn-sm ${currentPage === index + 1 ? 'btn-active' : ''}`}
-                                                onClick={() => paginate(index + 1)}
+                            <motion.div 
+                                className="form-control w-full flex flex-col justify-end"
+                                variants={filterVariants}
+                            >
+                                <div className="flex gap-2 h-[30px]">
+                                    <AnimatePresence>
+                                        {isMinerTransactionSearched && (
+                                            <motion.button
+                                                initial={{ opacity: 0, x: -20 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                exit={{ opacity: 0, x: -20 }}
+                                                className="btn btn-error btn-outline btn-sm flex-1 min-h-0 h-full hover:bg-error/20"
+                                                onClick={resetSearch}
                                             >
-                                                {index + 1}
-                                            </button>
-                                        ))}
-                                        <button 
-                                            className="join-item btn btn-sm"
-                                            onClick={() => paginate(currentPage + 1)}
-                                            disabled={currentPage === totalPages}
-                                        >
-                                            »
-                                        </button>
-                                    </div>
+                                                Reset
+                                            </motion.button>
+                                        )}
+                                    </AnimatePresence>
+                                    <motion.button
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className="btn btn-primary btn-sm flex-1 min-h-0 h-full"
+                                        onClick={applyFilters}
+                                    >
+                                        Apply
+                                    </motion.button>
                                 </div>
-                            )}
-                        </div>
-                    )}
-                    {activeTab === 'earning' && (
-                        <motion.div 
+                            </motion.div>
+                        </motion.div>
+                    </motion.div>
+
+                    <div className="bg-base-200 p-4 rounded-lg mb-6">
+                        <p className="text-sm text-gray-600">
+                            Showing {Math.min(currentItems.length, itemsPerPage)} Records from {minerTransactions.length} Records
+                        </p>
+                    </div>
+
+                    {minerTransactions.length === 0 ? (
+                        <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="text-center py-8"
+                            transition={{ duration: 0.5 }}
+                            className="card bg-white shadow-[0_0_15px_rgba(0,0,0,0.1)] hover:shadow-[0_0_20px_rgba(0,0,0,0.15)] transition-all duration-300 p-8"
                         >
-                            <p className="text-lg font-semibold">Earning logs coming soon!</p>
+                            <div className="text-center text-gray-600">
+                                <h3 className="text-xl font-semibold mb-2">No Data Found</h3>
+                                <p className="text-sm">There are no transactions to display.</p>
+                            </div>
                         </motion.div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {currentItems.map((transaction, index) => (
+                                <motion.div
+                                    key={transaction.id}
+                                    variants={cardVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                                    className="card bg-white shadow-[0_0_15px_rgba(0,0,0,0.1)] hover:shadow-[0_0_20px_rgba(0,0,0,0.15)] transition-all duration-300 border border-gray-100"
+                                >
+                                    <div className="card-body">
+                                        <p className="text-sm mb-1">
+                                            <span className="font-medium">Identifier:</span>
+                                            <span className="font-mono font-semibold"> {transaction.transaction_identifier}</span>
+                                        </p>
+                                        <p className="text-sm mb-1">
+                                            <span className="font-medium">Amount:</span>
+                                            <span className="font-mono font-semibold"> {parseFloat(transaction.investment_amount).toFixed(2)} USDT</span>
+                                        </p>
+                                        <p className="text-sm mb-1">
+                                            <span className="font-medium">TXN Hash:</span>
+                                            <span className="font-mono font-semibold"> {transaction.txn_hash}</span>
+                                        </p>
+                                        <p className="text-sm mb-1">
+                                            <span className="font-medium">Status:</span>
+                                            <span className={`capitalize ${transaction.status === 'pending' ? 'text-yellow-500' : 'text-green-500'}`}>
+                                                &nbsp; {transaction.status}
+                                            </span>
+                                        </p>
+                                        <p className="text-sm mb-1">
+                                            <span className="font-medium">Payment For:</span>
+                                            <span className="font-mono font-semibold">
+                                                &nbsp;{transaction.miner_plan.name} ({transaction.miner_plan.hash_power} GH/s)
+                                            </span>
+                                        </p>
+                                        <p className="text-sm mb-1">
+                                            <span className="font-medium">Plan Duration :</span>
+                                            <span className="font-mono font-semibold">
+                                                &nbsp;{transaction.miner_plan.duration} days
+                                            </span>
+                                        </p>
+                                        <p className="text-sm mb-1">
+                                            <span className="font-medium">Date:</span>
+                                            <span className="font-mono font-semibold">
+                                                &nbsp;{new Date(transaction.created_at).toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
+                                            </span>
+                                        </p>
+                                        <div className="card-actions justify-end mt-4">
+                                            <motion.button 
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                                className="btn btn-primary btn-sm"
+                                                onClick={() => openTransactionModal(transaction)}
+                                            >
+                                                View Details
+                                            </motion.button>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    )}
+
+                    {totalPages > 1 && (
+                        <div className="flex justify-center mt-8">
+                            <div className="join">
+                                <button 
+                                    className="join-item btn btn-sm"
+                                    onClick={() => paginate(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                >
+                                    «
+                                </button>
+                                {[...Array(totalPages)].map((_, index) => (
+                                    <button
+                                        key={index}
+                                        className={`join-item btn btn-sm ${currentPage === index + 1 ? 'btn-active' : ''}`}
+                                        onClick={() => paginate(index + 1)}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                ))}
+                                <button 
+                                    className="join-item btn btn-sm"
+                                    onClick={() => paginate(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                >
+                                    »
+                                </button>
+                            </div>
+                        </div>
                     )}
                 </div>
             </div>
@@ -449,8 +416,6 @@ const Index = ({ minerTransactions, filters, isMinerTransactionSearched, title }
                                             </p>
                                         </div>
                                     </div>
-
-                                   
                                 </div>
 
                                 <div className="mt-6 text-right">

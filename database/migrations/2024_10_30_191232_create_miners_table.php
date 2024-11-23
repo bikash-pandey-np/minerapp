@@ -33,7 +33,6 @@ return new class extends Migration
 
             $table->decimal('output_per_day', 10);
             $table->decimal('output_per_hour', 10);
-            $table->decimal('output_per_minute', 10);
 
             $table->timestamps();
         });

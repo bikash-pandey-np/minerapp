@@ -18,7 +18,6 @@ return new class extends Migration
             $table->decimal('price', 10, 2)->comment('in USDT');
             $table->decimal('hash_power', 10, 2)->comment('in GH/s');
 
-            $table->decimal('output_per_minute', 10, 2)->comment('in USDT');
             $table->decimal('output_per_hour', 10, 2)->comment('in USDT');
             $table->decimal('output_per_day', 10, 2)->comment('in USDT');
             $table->integer('duration')->comment('in days');

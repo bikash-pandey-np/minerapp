@@ -25,6 +25,7 @@ class MinerTotalEarnedEvent implements ShouldBroadcast
         $this->identifier = $identifier;
         $this->total_earned = $total_earned;
         $this->minerIdentifier = $minerIdentifier;
+        // \Log::info('MinerTotalEarnedEvent: ' . $this->identifier . ' ' . $this->total_earned . ' ' . $this->minerIdentifier);
     }
 
     /**
@@ -35,7 +36,7 @@ class MinerTotalEarnedEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('miner-' . $this->identifier),
+            new PrivateChannel('miner-' . $this->identifier),
         ];
     }
 

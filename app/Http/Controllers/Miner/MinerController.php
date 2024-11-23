@@ -28,4 +28,28 @@ class MinerController extends Controller
             'title' => 'Miners - ' . env('APP_NAME')
         ]);
     }
+
+    public function logs($miner_id)
+    {
+        $miner = Miner::where('identifier', $miner_id)->first();
+
+        $logs = $miner->minerEarningLogs()
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        $minerInfo = [
+            'identifier' => $miner->identifier,
+            'miner_name' => $miner->miner_name,
+            'hash_power' => $miner->hash_power,
+            'investment_amount' => $miner->investment_amount,
+            'total_earned' => $miner->total_earned,
+            'expires_at' => $miner->expires_at
+        ];
+
+        return Inertia::render('Minerportal/Miner/Log', [
+            'title' => 'Earning Logs - ' . env('APP_NAME'),
+            'logs' => $logs,
+            'miner' => $minerInfo
+        ]);
+    }
 }

@@ -158,7 +158,7 @@ const Index = ({balance, account_id, is_pro_account, withdrawal_fee, title}) => 
                                 </motion.div>
 
                                 <motion.div 
-                                    className="card-actions justify-end"
+                                    className="card-actions justify-start"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                 >

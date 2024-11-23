@@ -1,9 +1,11 @@
 import { Link, usePage } from '@inertiajs/inertia-react';
 import Layout from "../Layout";
-import { FaUserCircle, FaKey, FaEnvelope, FaInfoCircle, FaTimes, FaCoins } from 'react-icons/fa';
+import { FaUserCircle, FaKey, FaEnvelope, FaInfoCircle, FaTimes, FaCoins, FaSignOutAlt } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import Helmet from 'react-helmet';
+import Swal from 'sweetalert2';
+import { Inertia } from '@inertiajs/inertia';
 
 const Index = ({system_info, title}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,6 +23,28 @@ const Index = ({system_info, title}) => {
             document.body.style.overflow = 'auto';
         };
     }, [isModalOpen]);
+
+    const handleLogout = () => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You will be logged out of your account",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#6366f1',
+            cancelButtonColor: '#ef4444',
+            confirmButtonText: 'Yes, logout!',
+            background: '#1f2937',
+            color: '#fff',
+            customClass: {
+                confirmButton: 'bg-indigo-500 hover:bg-indigo-600',
+                cancelButton: 'bg-red-500 hover:bg-red-600'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Inertia.post(route('miners.logout'));
+            }
+        });
+    };
 
     const settingsLinks = [
         {
@@ -57,6 +81,13 @@ const Index = ({system_info, title}) => {
             icon: FaInfoCircle,
             onClick: () => setIsModalOpen(true),
             gradient: 'from-purple-500 to-pink-500'
+        },
+        {
+            title: 'Logout',
+            description: 'Sign out of your account',
+            icon: FaSignOutAlt,
+            onClick: handleLogout,
+            gradient: 'from-red-500 to-pink-500'
         }
     ];
 

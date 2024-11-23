@@ -15,7 +15,6 @@ class MinerPlan extends Model
         'description',
         'price',
         'hash_power',
-        'output_per_minute',
         'output_per_hour',
         'output_per_day',
         'duration',

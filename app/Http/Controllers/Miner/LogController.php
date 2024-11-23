@@ -9,7 +9,8 @@ use App\Models\CustomerMinerTransaction;
 
 class LogController extends Controller
 {
-    public function index(Request $request)
+
+    private function getMinerTransactions($request)
     {
         $minerTransactionSearchStatus = false;
 
@@ -40,11 +41,22 @@ class LogController extends Controller
 
         $minerTransactions = $query->latest()->get();
 
+        return [
+            'data' => $minerTransactions,
+            'isSearched' => $minerTransactionSearchStatus
+        ];
+
+    }
+
+    public function index(Request $request)
+    {
+        $minerTransactions = $this->getMinerTransactions($request);
         return Inertia::render('Minerportal/Logs/Index', [
             'title' => 'Payment Logs - ' . env('APP_NAME'),
-            'minerTransactions' => $minerTransactions,
+            'minerTransactions' => $minerTransactions['data'],
             'filters' => $request->only(['paymentDate', 'status', 'searchTerm']),
-            'isMinerTransactionSearched' => $minerTransactionSearchStatus
+            'isMinerTransactionSearched' => $minerTransactions['isSearched']
         ]);
+
     }
 }

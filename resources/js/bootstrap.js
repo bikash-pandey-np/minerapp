@@ -18,6 +18,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 import Echo from 'laravel-echo';
 
 import Pusher from 'pusher-js';
+Pusher.logToConsole = true;  // For debugging purposes
 window.Pusher = Pusher;
 
 window.Echo = new Echo({
@@ -28,4 +29,6 @@ window.Echo = new Echo({
     wsPort: 6001,
     forceTLS: false,
     disableStats: true,
+    encrypted: false,
+    disableReconnection: true,  // Disable automatic reconnections
 });

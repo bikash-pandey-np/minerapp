@@ -14,7 +14,7 @@ const VerifyEmail = ({ title, email }) => {
     const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState({});
 
-    const { data, setData, post } = useForm({
+    const { data, setData, post, errors: formErrors } = useForm({
         email: email,
         otp: ''
     });
@@ -51,7 +51,11 @@ const VerifyEmail = ({ title, email }) => {
     };
 
     const handleVerifyOTP = () => {
-        post(route('miners.verify-otp'));
+        post(route('miners.verify-otp'), {
+            onSuccess: () => {
+                navigate(route('miners.dashboard'));
+            }
+        });
     };
 
     const handleResendOTP = () => {
@@ -120,7 +124,7 @@ const VerifyEmail = ({ title, email }) => {
                                             className="input input-bordered text-gray-800"
                                             placeholder="Enter OTP"
                                         />
-                                        {errors.otp && <span className="text-error text-sm mt-1 text-left">{errors.otp}</span>}
+                                        {formErrors.otp && <span className="text-error text-sm mt-1 text-left">{formErrors.otp}</span>}
                                     </div>
 
                                     <div className="flex flex-col sm:flex-row gap-4 justify-center">

@@ -17,7 +17,7 @@ class CustomerOnly
     {
 
         if(!(Auth::guard('customer')->check())){
-            return redirect()->route('miners.login')->with('error', 'Please login to access this page.');
+            return redirect()->route('miners.login')->with('error', 'Access Restricted !');
         }
 
         return $next($request);

@@ -9,6 +9,7 @@ use App\Models\CustomerMinerTransaction;
 use App\Models\Customer;
 use App\Models\MinerPlan;
 use Illuminate\Support\Str;
+use App\Models\MinerEarningLog;
 
 class Miner extends Model
 {
@@ -27,14 +28,12 @@ class Miner extends Model
         'miner_name',
         'output_per_day',
         'output_per_hour',
-        'output_per_minute',
         'total_earned',
     ];
 
     protected $casts = [
         'output_per_day' => 'decimal:10',
         'output_per_hour' => 'decimal:10',
-        'output_per_minute' => 'decimal:10',
         'hash_power' => 'decimal:10',
         'is_active' => 'boolean',
         'investment_amount' => 'decimal:10',
@@ -77,5 +76,10 @@ class Miner extends Model
     public function getTotalEarnedAttribute($value)
     {
         return number_format($value, 4, '.', '');
+    }
+
+    public function minerEarningLogs()
+    {
+        return $this->hasMany(MinerEarningLog::class);
     }
 }

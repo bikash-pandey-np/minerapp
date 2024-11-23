@@ -10,7 +10,7 @@ use App\Models\CustomerProPayment;
 use App\Models\CustomerMinerTransaction;
 use App\Models\Miner;
 use App\Models\Withdraw;
-
+use App\Models\MinerEarningLog;
 class Customer extends Authenticatable
 {
     use HasFactory;
@@ -86,4 +86,9 @@ class Customer extends Authenticatable
     {
         return $this->hasMany(Miner::class);
     }
+
+    public function earningLogs()
+    {
+        return $this->hasMany(MinerEarningLog::class);
+    }   
 }

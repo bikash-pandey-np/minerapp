@@ -10,12 +10,18 @@ use App\Events\MinerTotalEarnedEvent;
 // })->name('dashboard');
 
 Route::namespace('\App\Http\Controllers\Miner')->group(function(){
-    Route::get('/login', 'AuthController@login')->name('login');
-    Route::post('/login', 'AuthController@loginPost');
-    Route::get('/register', 'AuthController@register')->name('register');
-    Route::post('/register', 'AuthController@registerPost');
+    Route::prefix('login')->group(function(){
+        Route::get('/', 'AuthController@login')->name('login');
+        Route::post('/', 'AuthController@loginPost');
+    });
+
+    Route::prefix('register')->group(function(){
+        Route::get('/', 'AuthController@register')->name('register');
+        Route::post('/', 'AuthController@registerPost');
+    });
     
     Route::middleware('customer')->group(function(){
+        Route::post('/logout', 'AuthController@logout')->name('logout');
         Route::get('/', 'DashboardController@index')->name('dashboard');
 
         Route::get('/verify-email', 'AuthController@verifyEmailPage')->name('verify-email');
@@ -53,6 +59,7 @@ Route::namespace('\App\Http\Controllers\Miner')->group(function(){
 
         Route::prefix('miner')->group(function(){
             Route::get('/', 'MinerController@index')->name('miner');
+            Route::get('/logs/{miner_id}', 'MinerController@logs')->name('miner-logs');
         });
 
         Route::prefix('withdraw')->group(function(){

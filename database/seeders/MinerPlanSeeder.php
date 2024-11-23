@@ -18,7 +18,6 @@ class MinerPlanSeeder extends Seeder
             'price' => 100,
             'duration' => 30,
             'hash_power' => 1,
-            'output_per_minute' => 0.123,
             'output_per_hour' => 7.38,
             'output_per_day' => 177.12,
         ]);
@@ -29,7 +28,6 @@ class MinerPlanSeeder extends Seeder
             'price' => 200,
             'duration' => 30,
             'hash_power' => 2,
-            'output_per_minute' => 0.123*2,
             'output_per_hour' => 7.38*2,
             'output_per_day' => 177.12*2,
         ]);
@@ -40,7 +38,6 @@ class MinerPlanSeeder extends Seeder
             'price' => 499,
             'duration' => 30,
             'hash_power' => 5.2,
-            'output_per_minute' => 0.123*5.2,
             'output_per_hour' => 7.38*5.2,
             'output_per_day' => 177.12*5.2,
         ]);

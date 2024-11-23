@@ -5,7 +5,7 @@ import { usePage } from '@inertiajs/inertia-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Helmet from 'react-helmet';
-const Login = ({title}) => {
+const Login = () => {
     const { flash } = usePage().props;
 
     const { data, setData, post, processing, errors } = useForm({
@@ -32,7 +32,7 @@ const Login = ({title}) => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center px-4 sm:px-6 lg:px-8">
             <Helmet>
-                <title>{title}</title>
+                <title>Login</title>
             </Helmet>
             <div className="max-w-md w-full bg-white rounded-lg shadow-2xl p-8">
                 <div>

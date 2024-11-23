@@ -3,15 +3,15 @@ import { useState, useCallback } from "react";
 import { Inertia } from '@inertiajs/inertia';
 import Swal from 'sweetalert2';
 
-const Index = ({payments, searchStatus}) => {
-    console.log(payments);
+const Index = ({logs, searchStatus}) => {
+    console.log(logs);
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleSearch = useCallback((value) => {
         let timeoutId;
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
-            Inertia.get(route('admin.planPayments'), { search: value }, {
+            Inertia.get(route('admin.withdraw'), { search: value }, {
                 preserveState: true,
                 preserveScroll: true,
                 replace: true
@@ -25,27 +25,41 @@ const Index = ({payments, searchStatus}) => {
         handleSearch(value);
     };
 
-    const handleApprove = (payment) => {
+    const handleApprove = (withdraw) => {
         Swal.fire({
             title: 'Are you sure?',
-            text: "You want to confirm this payment?",
+            text: "You want to process this withdrawal?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, approve it!'
+            confirmButtonText: 'Yes, process it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                Inertia.post(route('admin.approvePayment'), {
-                    id: payment.id
-                });
+                Inertia.post(route('admin.processWithdraw', { identifier: withdraw.identifier }));
             }
         });
     };
 
-    const handleReject = (payment) => {
+    const handleComplete = (withdraw) => {
         Swal.fire({
-            title: 'Reject Payment',
+            title: 'Are you sure?',
+            text: "You want to mark this withdrawal as completed?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, complete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Inertia.post(route('admin.completeWithdraw', { identifier: withdraw.identifier }));
+            }
+        });
+    };
+
+    const handleReject = (withdraw) => {
+        Swal.fire({
+            title: 'Reject Withdrawal',
             input: 'textarea',
             inputLabel: 'Reason for rejection',
             inputPlaceholder: 'Enter your reason here...',
@@ -59,11 +73,10 @@ const Index = ({payments, searchStatus}) => {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                Inertia.post(route('admin.rejectPayment'), {
-                    id: payment.id,
+                console.log('rejecting', result.value);
+                Inertia.post(route('admin.rejectWithdraw', { identifier: withdraw.identifier }), {
                     reason: result.value
                 });
-                
             }
         });
     };
@@ -74,7 +87,7 @@ const Index = ({payments, searchStatus}) => {
                 <div className="flex items-center">
                     <input
                         type="text"
-                        placeholder="Search transactions, customers, or plans..."
+                        placeholder="Search withdrawals..."
                         className="input input-bordered w-full max-w-xs"
                         value={searchTerm}
                         onChange={handleSearchChange}
@@ -83,7 +96,7 @@ const Index = ({payments, searchStatus}) => {
                         <button
                             onClick={() => {
                                 setSearchTerm('');
-                                Inertia.get(route('admin.planPayments'), {}, {
+                                Inertia.get(route('admin.withdraw'), {}, {
                                     preserveState: true,
                                     preserveScroll: true,
                                     replace: true
@@ -101,98 +114,110 @@ const Index = ({payments, searchStatus}) => {
                     <tr>
                         <th>Transaction Details</th>
                         <th>Customer Details</th>
-                        <th>Amount</th>
-                        <th>Miner Plan</th>
+                        <th>Amount Details</th>
+                        <th>Wallet Address</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody className="bg-base-100">
-                    {payments.data.length === 0 ? (
+                    {logs.data.length === 0 ? (
                         <tr>
                             <td colSpan="6" className="text-center py-4">
                                 No records found
                             </td>
                         </tr>
                     ) : (
-                        payments.data.map(payment => (
-                            <tr key={payment.id}>
+                        logs.data.map(withdraw => (
+                            <tr key={withdraw.id}>
                                 <td>
                                     <div className="flex flex-col gap-1">
                                         <span className="text-sm font-medium">
-                                            ID: {payment.transaction_identifier}
+                                            ID: {withdraw.identifier}
                                         </span>
                                         <span className="text-xs opacity-70">
-                                            Hash: {payment.txn_hash}
-                                        </span>
-                                        <span className="text-xs opacity-70">
-                                            Date: {payment.new_created_at}
+                                            Date: {new Date(withdraw.new_created_at).toLocaleString()}
                                         </span>
                                     </div>
                                 </td>
                                 <td>
                                     <div className="flex flex-col gap-1">
                                         <span className="text-sm font-medium">
-                                            {payment.customer.email}
+                                            {withdraw.customer.email}
                                         </span>
                                         <span className="text-xs opacity-70">
-                                            Account: {payment.customer.account_id}
+                                            Account: {withdraw.customer.account_id}
                                         </span>
                                     </div>
                                 </td>
                                 <td>
-                                    <span className="font-medium">
-                                        {parseFloat(payment.investment_amount).toFixed(2)} USDT
+                                    <div className="flex flex-col gap-1">
+                                        <span className="text-sm font-medium">
+                                            Request: {parseFloat(withdraw.request_amount).toFixed(2)} USDT
+                                        </span>
+                                        <span className="text-xs opacity-70">
+                                            Fee: {parseFloat(withdraw.fee).toFixed(2)} USDT
+                                        </span>
+                                        <span className="text-xs opacity-70">
+                                            Net: {parseFloat(withdraw.net_amount).toFixed(2)} USDT
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span className="text-xs font-mono">
+                                        {withdraw.trc_20_wallet_address}
                                     </span>
                                 </td>
                                 <td>
-                                    <div className="flex flex-col gap-1">
-                                        <span className="text-sm font-medium">
-                                            {payment.miner_plan.name}
-                                        </span>
-                                        <span className="text-xs opacity-70">
-                                            Hash Power: {payment.miner_plan.hash_power}
-                                        </span>
-                                        <span className="text-xs opacity-70">
-                                            Duration: {payment.miner_plan.duration} days
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span className={`badge badge-sm ${payment.status === 'approved' ? 'badge-success text-white' : payment.status === 'rejected' ? 'badge-error text-white' : 'badge-warning'}`}>
-                                        {payment.status}
+                                    <span className={`badge badge-sm ${withdraw.status === 'completed' ? 'badge-success text-white' : withdraw.status === 'rejected' ? 'badge-error text-white' : withdraw.status === 'processing' ? 'badge-info text-white' : 'badge-warning'}`}>
+                                        {withdraw.status}
                                     </span>
                                 </td>
                                 <td>
-                                    {payment.status === 'pending' && (
+                                    {withdraw.status === 'pending' && (
                                         <div className="flex gap-2">
                                             <button 
-                                                className="btn btn-sm btn-success"
-                                                onClick={() => handleApprove(payment)}
+                                                className="btn btn-sm btn-info"
+                                                onClick={() => handleApprove(withdraw)}
                                             >
-                                                Approve
+                                                Process
                                             </button>
                                             <button 
                                                 className="btn btn-sm btn-error"
-                                                onClick={() => handleReject(payment)}
+                                                onClick={() => handleReject(withdraw)}
                                             >
                                                 Reject
                                             </button>
                                         </div>
                                     )}
 
-                                    {payment.status === 'approved' && (
+                                    {withdraw.status === 'processing' && (
+                                        <div className="flex gap-2">
+                                            <button 
+                                                className="btn btn-sm btn-success"
+                                                onClick={() => handleComplete(withdraw)}
+                                            >
+                                                Complete
+                                            </button>
+                                            <button 
+                                                className="btn btn-sm btn-error"
+                                                onClick={() => handleReject(withdraw)}
+                                            >
+                                                Reject
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {withdraw.status === 'completed' && (
                                         <span className="text-xs opacity-70">
-                                            Approved at <span className="font-medium font-mono">{payment.approved_at}</span>
+                                            Completed at <span className="font-medium font-mono">{new Date(withdraw.completed_at).toLocaleString()}</span>
                                         </span>
                                     )}
 
-                                    {payment.status === 'rejected' && (
-                                        <>
+                                    {withdraw.status === 'rejected' && (
                                         <span className="text-xs opacity-70">
-                                            Reason: <span className="font-medium font-mono">{payment.reject_reason}</span>
+                                            Reason: <span className="font-medium font-mono">{withdraw.remark}</span>
                                         </span>
-                                        </>
                                     )}
                                 </td>
                             </tr>
@@ -201,7 +226,7 @@ const Index = ({payments, searchStatus}) => {
                 </tbody>
             </table>
             <div className="join mt-4 flex justify-center">
-                {payments.links.map((link, index) => (
+                {logs.links.map((link, index) => (
                     <button 
                         key={index}
                         className={`join-item btn btn-sm ${
@@ -221,3 +246,4 @@ const Index = ({payments, searchStatus}) => {
 };
 
 export default Index;
+

@@ -1,6 +1,6 @@
 import Layout from "../Layout";
 import { useForm } from '@inertiajs/inertia-react';
-import { FaUser, FaEnvelope, FaIdCard, FaCalendar, FaDollarSign, FaCrown, FaCamera } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaIdCard, FaCalendar, FaDollarSign, FaCrown, FaCamera, FaSave } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import Helmet from 'react-helmet';
 
@@ -196,13 +196,23 @@ const Profile = ({profile, title}) => {
                             </div>
                         </div>
 
-                        <div className="mt-6 flex justify-end">
+                        <div className="mt-6 flex justify-start">
                             <button 
                                 type="submit" 
-                                className="btn btn-primary"
+                                className="btn btn-primary gap-2"
                                 disabled={processing}
                             >
-                                {processing ? 'Saving...' : 'Save Changes'}
+                                {processing ? (
+                                    <>
+                                        <FaSave className="animate-spin" />
+                                        Saving Changes...
+                                    </>
+                                ) : (
+                                    <>
+                                        <FaSave />
+                                        Save Changes
+                                    </>
+                                )}
                             </button>
                         </div>
                     </form>

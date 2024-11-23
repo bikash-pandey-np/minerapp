@@ -48,12 +48,12 @@ const Index = ({ plans, title }) => {
                                             </div>
                                             <div className="flex justify-between items-center bg-white bg-opacity-10 rounded p-3">
                                                 <div className="text-center">
-                                                    <div className="text-sm font-semibold">Per Minute</div>
-                                                    <div className="text-lg font-bold">{plan.output_per_minute} <span className="text-xs">USDT</span></div>
-                                                </div>
-                                                <div className="text-center">
                                                     <div className="text-sm font-semibold">Per Hour</div>
                                                     <div className="text-lg font-bold">{plan.output_per_hour} <span className="text-xs">USDT</span></div>
+                                                </div>
+                                                <div className="text-center">
+                                                    <div className="text-sm font-semibold">Per Day</div>
+                                                    <div className="text-lg font-bold">{plan.output_per_day} <span className="text-xs">USDT</span></div>
                                                 </div>
                                             </div>
                                         </div>

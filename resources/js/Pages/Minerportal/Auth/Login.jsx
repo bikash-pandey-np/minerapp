@@ -2,14 +2,36 @@ import React, { useEffect } from 'react';
 import { useForm, usePage } from '@inertiajs/inertia-react';
 import { Link } from '@inertiajs/inertia-react';
 import { ToastContainer, toast } from 'react-toastify';
+import Helmet from 'react-helmet';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Login = () => {
+const Login = ({title}) => {
     const { flash } = usePage().props;
     const { data, setData, post, processing, errors } = useForm({
         email: '',
         password: '',
     });
+
+    useEffect(() => {
+        console.log('subscribing to channel for account_id');
+        const channel = window.Echo.private(`miner-7318547117`);
+
+        channel.subscribed(() => {
+            console.log('Successfully connected to the miner-7318547117 channel');
+        });
+
+
+        console.log('listening for event');
+        
+        channel.listen('.MinerTotalEarnedEvent', (e) => {
+            console.log('event received', e);
+        });
+        return () => {
+            console.log('unsubscribing from channel');
+            channel.stopListening('.MinerTotalEarnedEvent');
+            window.Echo.leave(`miner-7318547117`);
+        };
+    }, []);
 
     useEffect(() => {
 
@@ -32,6 +54,9 @@ const Login = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
+            <Helmet>
+                <title>{title}</title>
+            </Helmet>
             <div className="card w-full max-w-md bg-base-100 shadow-2xl">
                 <div className="card-body">
                     <h2 className="card-title text-3xl font-bold mb-6 text-center text-primary">Login</h2>
