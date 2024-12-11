@@ -1,0 +1,1 @@
+import{r as e,j as t}from"./app-9776f975.js";/* empty css            */const n=()=>{const[r,s]=e.useState(0);return t.jsx("div",{children:t.jsxs("p",{children:["Total Earned: ",r]})})};export{n as default};

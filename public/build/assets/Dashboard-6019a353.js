@@ -1,0 +1,1 @@
+import{j as r}from"./app-9776f975.js";import o from"./Layout-5b430019.js";/* empty css            */import"./ReactToastify-ccecd9fe.js";import"./iconBase-549d7331.js";import"./sweetalert2.esm.all-073c5cf9.js";import"./Helmet-009dc957.js";import"./index-e82f3d28.js";const n=()=>r.jsx(o,{children:r.jsx("div",{children:"Dashboard"})});export{n as default};
