@@ -1,12 +1,10 @@
 /.phpunit.cache
-
-
 /public/hot
 
-#dont include anything from storage
-/storage/*.
+# Don't include anything from storage
+/storage/*
 
-#but include image. 
+# But include this specific image
 !/storage/app/public/customer_default_avatar.png
 
 /vendor
