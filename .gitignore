@@ -3,7 +3,12 @@
 
 /public/hot
 
-/storage/*.key
+#dont include anything from storage
+/storage/*.
+
+#but include image. 
+!/storage/app/public/customer_default_avatar.png
+
 /vendor
 # .env
 .env.backup
