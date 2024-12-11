@@ -11,6 +11,7 @@ return [
         'port' => env('LARAVEL_WEBSOCKETS_PORT', 6001),
     ],
 
+
     /*
      * This package comes with multi tenancy out of the box. Here you can
      * configure the different apps that can use the webSockets server.
@@ -48,7 +49,7 @@ return [
      * Leave this empty if you want to accept requests from all hosts.
      */
     'allowed_origins' => [
-        //
+        'https://miner.thecapex.pro'
     ],
 
     /*
